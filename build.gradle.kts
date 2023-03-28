@@ -91,6 +91,10 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
+
+                // WA for https://youtrack.jetbrains.com/issue/KT-57235
+                implementation("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+
                 implementation(kotlin("stdlib-js"))
 
                 implementation(enforcedPlatform(kotlinw("wrappers-bom:$kotlin_wrapper_version")))
