@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    kotlin("multiplatform") version "1.8.20-RC"
-    kotlin("plugin.serialization") version "1.8.20-RC"
+    kotlin("multiplatform") version "1.8.21"
+    kotlin("plugin.serialization") version "1.8.21"
     id("org.jetbrains.dokka") version "1.8.10"
     application
 }
@@ -22,11 +25,11 @@ kotlin {
     js(IR) {
         browser {
             binaries.executable()
-            commonWebpackConfig {
+            commonWebpackConfig(Action {
                 cssSupport {
                     enabled.set(true)
                 }
-            }
+            })
         }
     }
     sourceSets {
@@ -52,7 +55,7 @@ kotlin {
                 implementation(ktor("resources"))
                 implementation(ktor("serialization-kotlinx-json"))
 
-                implementation("io.github.oshai:kotlin-logging:4.0.0-beta-23")
+                implementation("io.github.oshai:kotlin-logging:4.0.0-beta-28")
             }
         }
         val commonTest by getting {
@@ -75,8 +78,8 @@ kotlin {
                 implementation(ktor("server-resources"))
                 implementation(ktor("server-html-builder-jvm"))
 
-                implementation("io.insert-koin:koin-core:3.3.3")
-                implementation("io.insert-koin:koin-ktor:3.3.1")
+                implementation("io.insert-koin:koin-core:3.4.0")
+                implementation("io.insert-koin:koin-ktor:3.4.0")
 
                 implementation(enforcedPlatform(exposed("exposed-bom:$exposed_version")))
                 implementation(exposed("exposed-core"))
@@ -93,7 +96,7 @@ kotlin {
             dependencies {
 
                 // WA for https://youtrack.jetbrains.com/issue/KT-57235
-                implementation("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20-RC")
+//                implementation("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20")
 
                 implementation(kotlin("stdlib-js"))
 
@@ -101,13 +104,12 @@ kotlin {
                 implementation(kotlinw("react"))
                 implementation(kotlinw("react-dom"))
                 implementation(kotlinw("emotion"))
+                implementation(kotlinw("mui"))
+                implementation(kotlinw("mui-icons"))
 
                 implementation(ktor("client-core"))
                 implementation(ktor("client-content-negotiation"))
                 implementation(ktor("client-resources"))
-
-                implementation(npm("bootstrap", "5.3.0-alpha1"))
-                implementation(npm("core-js", "3.27.2"))
             }
         }
         val jsTest by getting
@@ -117,9 +119,16 @@ kotlin {
 application {
     mainClass.set("org.github.anisch.ServerKt")
     applicationDefaultJvmArgs = listOf(
+        "-Dfile.encoding=UTF-8",
         "-Dio.ktor.development=true",
         "-Dorg.slf4j.simpleLogger.defaultLogLevel=debug"
     )
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        languageVersion.set(KotlinVersion.KOTLIN_2_0)
+    }
 }
 
 tasks.named<Copy>("jvmProcessResources") {

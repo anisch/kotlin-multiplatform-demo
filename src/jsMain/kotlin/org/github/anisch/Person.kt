@@ -1,8 +1,5 @@
 package org.github.anisch
 
-import csstype.Display
-import csstype.px
-import emotion.react.css
 import io.github.oshai.KotlinLogging
 import io.ktor.client.call.*
 import io.ktor.client.plugins.resources.*
@@ -10,16 +7,19 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import mui.icons.material.Star
+import mui.material.*
+import mui.material.styles.TypographyVariant
+import mui.system.sx
 import org.github.anisch.NetworkState.*
 import react.*
-import react.dom.html.ReactHTML.button
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.h1
-import react.dom.html.ReactHTML.h4
-import react.dom.html.ReactHTML.input
-import react.dom.html.ReactHTML.label
-import react.dom.html.ReactHTML.li
-import react.dom.html.ReactHTML.ul
+import react.dom.aria.AriaAutoComplete
+import react.dom.aria.ariaAutoComplete
+import react.dom.html.ReactHTML.form
+import react.dom.onChange
+import web.cssom.Display
+import web.cssom.JustifyContent
+import web.html.HTMLInputElement
 import web.html.InputType
 import org.github.anisch.resources.Person as RPerson
 import org.github.anisch.serial.Person as SPerson
@@ -50,77 +50,70 @@ val PersonForm = FC<PersonProps> { props ->
     var birthDay by useState<LocalDate?>(null)
     var insuranceNumber by useState("")
 
-    div {
-        h4 {
+    Box {
+        sx {
+            display = Display.grid
+            justifyContent = JustifyContent.left
+        }
+        component = form
+        ariaAutoComplete = AriaAutoComplete.none
+
+        Typography {
+            variant = TypographyVariant.h4
             +"Neue Person anlegen:"
         }
 
-        label {
-            +"Name:"
-        }
-        input {
-            css {
-                marginBottom = 5.px
-                display = Display.block
-            }
+        TextField {
+            label = ReactNode("Name")
             type = InputType.text
+            size = Size.small
+            margin = FormControlMargin.normal
             value = name
-            onChange = { event ->
-                name = event.target.value
+            onChange = { element ->
+                val target = element.target as HTMLInputElement
+                name = target.value
             }
         }
 
-        label {
-            +"Vorname:"
-        }
-        input {
-            css {
-                marginBottom = 5.px
-                display = Display.block
-            }
+        TextField {
+            label = ReactNode("Vorname")
             type = InputType.text
+            size = Size.small
+            margin = FormControlMargin.normal
             value = givenName
-            onChange = { event ->
-                givenName = event.target.value
+            onChange = { element ->
+                val target = element.target as HTMLInputElement
+                givenName = target.value
             }
         }
 
-        label {
-            +"Geburtstag:"
-        }
-        input {
-            css {
-                marginBottom = 5.px
-                display = Display.block
-            }
+        TextField {
+            label = ReactNode("Geburtstag")
             type = InputType.date
+            size = Size.small
+            margin = FormControlMargin.normal
             value = birthDay ?: ""
-            onChange = { event ->
+            onChange = { element ->
+                val target = element.target as HTMLInputElement
                 birthDay =
-                    if (event.target.value.isBlank()) null
-                    else LocalDate.parse(event.target.value)
+                    if (target.value.isBlank()) null
+                    else LocalDate.parse(target.value)
             }
         }
 
-        label {
-            +"Versicherungsnummer:"
-        }
-        input {
-            css {
-                marginBottom = 5.px
-                display = Display.block
-            }
+        TextField {
+            label = ReactNode("Versicherungsnummer")
             type = InputType.text
+            size = Size.small
+            margin = FormControlMargin.normal
             value = insuranceNumber
-            onChange = { event ->
-                insuranceNumber = event.target.value
+            onChange = { element ->
+                val target = element.target as HTMLInputElement
+                insuranceNumber = target.value
             }
-
         }
-        button {
-            css {
-                marginTop = 10.px
-            }
+        Button {
+            variant = ButtonVariant.outlined
             onClick = {
                 scope.launch {
                     log.info { "Send Person to server" }
@@ -234,11 +227,15 @@ val PersonListComponent = FC<PersonProps> { props ->
         }
     }
 
-    h1 {
+    Typography {
+        variant = TypographyVariant.h1
         +"Hier stehen einige Personen....."
     }
-    ul {
-        li {
+    List {
+        ListItem {
+            ListItemIcon {
+                Star()
+            }
             +when (singleData) {
                 is IsLoading -> "Lade Person"
                 is Error -> "Fehler beim Laden der Person"
@@ -247,7 +244,10 @@ val PersonListComponent = FC<PersonProps> { props ->
                 else -> ""
             }
         }
-        li {
+        ListItem {
+            ListItemIcon {
+                Star()
+            }
             +when (noSingleData) {
                 is IsLoading -> "Lade Person"
                 is Error -> "Fehler beim Laden der Person"
@@ -258,10 +258,25 @@ val PersonListComponent = FC<PersonProps> { props ->
         }
 
         when (data) {
-            is IsLoading -> li { +"Lade alle Personen" }
-            is Error -> li { +"Fehler beim Laden der Personen" }
+            is IsLoading -> ListItem {
+                ListItemIcon {
+                    Star()
+                }
+                +"Lade alle Personen"
+            }
+
+            is Error -> ListItem {
+                ListItemIcon {
+                    Star()
+                }
+                +"Fehler beim Laden der Personen"
+            }
+
             is Success -> data.data!!.forEach { p ->
-                li {
+                ListItem {
+                    ListItemIcon {
+                        Star()
+                    }
                     key = p.id.toString()
                     +"$p"
                 }

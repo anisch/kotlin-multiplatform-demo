@@ -59,9 +59,7 @@ fun main() {
             get("/") {
                 call.respondHtml(HttpStatusCode.OK, HTML::index)
             }
-            static("/static") {
-                resources()
-            }
+            staticResources("/static", "")
         }
     }.start(wait = true)
 }

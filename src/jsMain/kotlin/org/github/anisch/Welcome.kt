@@ -1,12 +1,16 @@
 package org.github.anisch
 
-import csstype.*
 import emotion.react.css
+import mui.material.Size
+import mui.material.TextField
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.input
+import react.dom.onChange
 import react.useState
+import web.cssom.px
+import web.cssom.rgb
+import web.html.HTMLInputElement
 import web.html.InputType
 
 external interface WelcomeProps : Props {
@@ -23,7 +27,7 @@ val Welcome = FC<WelcomeProps> { props ->
         }
         +"Hello, $name"
     }
-    input {
+    TextField {
         css {
             marginTop = 5.px
             marginBottom = 5.px
@@ -31,8 +35,10 @@ val Welcome = FC<WelcomeProps> { props ->
         }
         type = InputType.text
         value = name
-        onChange = { event ->
-            name = event.target.value
+        size = Size.small
+        onChange = { element ->
+            val target = element.target as HTMLInputElement
+            name = target.value
         }
     }
     PersonComponent {}

@@ -4,6 +4,7 @@ import org.github.anisch.model.PersonTable
 import org.github.anisch.model.PersonTable.birthDay
 import org.github.anisch.model.PersonTable.givenName
 import org.github.anisch.model.PersonTable.id
+import org.github.anisch.model.PersonTable.insuranceNumber
 import org.github.anisch.model.PersonTable.name
 import org.github.anisch.serial.Person
 import org.jetbrains.exposed.sql.ResultRow
@@ -19,7 +20,7 @@ fun ResultRow.toPerson() =
         name = this[name],
         givenName = this[givenName],
         birthDay = this[birthDay],
-        insuranceNumber = this[PersonTable.insuranceNumber],
+        insuranceNumber = this[insuranceNumber],
     )
 
 interface PersonDao {
