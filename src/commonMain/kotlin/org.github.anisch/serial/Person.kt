@@ -1,7 +1,5 @@
 package org.github.anisch.serial
 
-import io.ktor.http.*
-import io.ktor.resources.*
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun ResultRow.toPerson() =
     Person(
-        id = this[id],
+        id = this[id].value,
         name = this[name],
         givenName = this[givenName],
         birthDay = this[birthDay],
@@ -30,14 +30,16 @@ interface PersonDao {
 }
 
 class DefaultPersonDao : PersonDao {
-    override suspend fun getAll(): List<Person> = transaction {
-        PersonTable.selectAll().toList()
-    }.map { it.toPerson() }
+    override suspend fun getAll(): List<Person> =
+        transaction {
+            PersonTable.selectAll().toList()
+        }.map { it.toPerson() }
 
-    override suspend fun getByID(id: Long): Person? = transaction {
-        PersonTable.select { PersonTable.id eq id }.toList()
-    }.map { it.toPerson() }
-        .firstOrNull()
+    override suspend fun getByID(id: Long): Person? =
+        transaction {
+            PersonTable.select { PersonTable.id eq id }.toList()
+        }.map { it.toPerson() }
+            .firstOrNull()
 
     override suspend fun savePerson(p: Person): Long {
         return transaction {
@@ -49,7 +51,7 @@ class DefaultPersonDao : PersonDao {
                 it[insuranceNumber] = p.insuranceNumber
             } get PersonTable.id
 
-            return@transaction id
+            return@transaction id.value
         }
     }
 }

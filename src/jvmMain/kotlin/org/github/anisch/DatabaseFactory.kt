@@ -1,6 +1,6 @@
 package org.github.anisch
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.datetime.LocalDate
 import org.github.anisch.model.PersonTable
 import org.jetbrains.exposed.sql.Database

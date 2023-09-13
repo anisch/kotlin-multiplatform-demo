@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.8.21"
-    kotlin("plugin.serialization") version "1.8.21"
-    id("org.jetbrains.dokka") version "1.8.10"
+    kotlin("multiplatform") version "1.9.20-Beta"
+    kotlin("plugin.serialization") version "1.9.20-Beta"
+    id("org.jetbrains.dokka") version "1.9.0"
     application
 }
 
@@ -22,7 +22,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(IR) {
+    js {
         browser {
             binaries.executable()
             commonWebpackConfig(Action {
@@ -55,7 +55,7 @@ kotlin {
                 implementation(ktor("resources"))
                 implementation(ktor("serialization-kotlinx-json"))
 
-                implementation("io.github.oshai:kotlin-logging:4.0.0-beta-28")
+                implementation("io.github.oshai:kotlin-logging:5.1.0")
             }
         }
         val commonTest by getting {
@@ -67,7 +67,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.9.1")
 
                 implementation(ktor("server-call-logging"))
                 implementation(ktor("server-content-negotiation"))
@@ -78,14 +78,15 @@ kotlin {
                 implementation(ktor("server-resources"))
                 implementation(ktor("server-html-builder-jvm"))
 
-                implementation("io.insert-koin:koin-core:3.4.0")
-                implementation("io.insert-koin:koin-ktor:3.4.0")
+                implementation("io.insert-koin:koin-core:3.5.0")
+                implementation("io.insert-koin:koin-ktor:3.5.0")
 
                 implementation(enforcedPlatform(exposed("exposed-bom:$exposed_version")))
                 implementation(exposed("exposed-core"))
                 implementation(exposed("exposed-dao"))
                 implementation(exposed("exposed-jdbc"))
                 implementation(exposed("exposed-kotlin-datetime"))
+
                 implementation("com.h2database:h2:$h2_version")
 
                 runtimeOnly("org.slf4j:slf4j-simple:2.0.6")
@@ -94,9 +95,6 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-
-                // WA for https://youtrack.jetbrains.com/issue/KT-57235
-//                implementation("org.jetbrains.kotlin:kotlinx-atomicfu-runtime:1.8.20")
 
                 implementation(kotlin("stdlib-js"))
 

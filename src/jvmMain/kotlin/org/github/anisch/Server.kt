@@ -15,7 +15,7 @@ import kotlinx.html.*
 import kotlinx.serialization.json.Json
 import org.github.anisch.modules.daoModule
 import org.github.anisch.routing.personRouting
-import org.koin.core.context.startKoin
+import org.koin.ktor.plugin.Koin
 
 fun HTML.index() {
     head {
@@ -48,8 +48,7 @@ fun main() {
                 prettyPrint = true
             })
         }
-
-        startKoin {
+        install(Koin) {
             modules(daoModule)
         }
 
