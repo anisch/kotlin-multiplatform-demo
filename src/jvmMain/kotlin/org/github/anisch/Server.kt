@@ -10,12 +10,13 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import kotlinx.html.*
 import kotlinx.serialization.json.Json
 import org.github.anisch.modules.daoModule
 import org.github.anisch.routing.personRouting
-import org.koin.ktor.plugin.Koin
+import org.koin.core.context.startKoin
 
 fun HTML.index() {
     head {
@@ -48,7 +49,9 @@ fun main() {
                 prettyPrint = true
             })
         }
-        install(Koin) {
+        install(Resources)
+
+        startKoin {
             modules(daoModule)
         }
 

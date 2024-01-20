@@ -1,9 +1,10 @@
 package org.github.anisch.modules
 
-import org.github.anisch.dao.DefaultPersonDao
-import org.github.anisch.dao.PersonDao
+import org.github.anisch.repos.DefaultPersonRepository
+import org.github.anisch.repos.PersonRepository
+import org.github.anisch.serial.Person
 import org.koin.dsl.module
 
 val daoModule = module {
-    single<PersonDao> { DefaultPersonDao() }
+    single<PersonRepository> { DefaultPersonRepository() }
 }
