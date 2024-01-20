@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.9.20-Beta"
-    kotlin("plugin.serialization") version "1.9.20-Beta"
-    id("org.jetbrains.dokka") version "1.9.0"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.dokka)
     application
 }
 
@@ -32,42 +32,39 @@ kotlin {
             })
         }
     }
-    sourceSets {
-        val ktor_version: String by project
-        val serial_version: String by project
-        val kotlin_wrapper_version: String by project
-        val exposed_version: String by project
-        val h2_version: String by project
-        val kotlinx_coroutines: String by project
-        val kotlinx_datetime: String by project
 
-        val commonMain by getting {
+    applyDefaultHierarchyTemplate()
+
+    sourceSets {
+        val ktor_version = libs.versions.ktor.get()
+        val kotlin_wrapper_version = libs.versions.kt.wrappers.get()
+
+        commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines")
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.html)
 
-                implementation(enforcedPlatform(serial("bom:$serial_version")))
-                implementation(serial("json"))
+                implementation(project.dependencies.enforcedPlatform(libs.kotlinx.serialization.bom))
+                implementation(libs.kotlinx.serialization.json)
 
-                implementation(enforcedPlatform(ktor("bom:$ktor_version")))
+                implementation(project.dependencies.enforcedPlatform(ktor("bom:$ktor_version")))
                 implementation(ktor("resources"))
                 implementation(ktor("serialization-kotlinx-json"))
 
-                implementation("io.github.oshai:kotlin-logging:5.1.0")
+                implementation(libs.kotlin.logging)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 implementation(kotlin("stdlib"))
-
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.9.1")
 
                 implementation(ktor("server-call-logging"))
                 implementation(ktor("server-content-negotiation"))
@@ -78,39 +75,43 @@ kotlin {
                 implementation(ktor("server-resources"))
                 implementation(ktor("server-html-builder-jvm"))
 
-                implementation("io.insert-koin:koin-core:3.5.0")
-                implementation("io.insert-koin:koin-ktor:3.5.0")
+                implementation(project.dependencies.enforcedPlatform(libs.koin.bom))
+                implementation(libs.koin.core)
+                implementation(libs.koin.ktor)
 
-                implementation(enforcedPlatform(exposed("exposed-bom:$exposed_version")))
-                implementation(exposed("exposed-core"))
-                implementation(exposed("exposed-dao"))
-                implementation(exposed("exposed-jdbc"))
-                implementation(exposed("exposed-kotlin-datetime"))
+                implementation(project.dependencies.enforcedPlatform(libs.exposed.bom))
+                implementation(libs.exposed.core)
+                implementation(libs.exposed.dao)
+                implementation(libs.exposed.jdbc)
+                implementation(libs.exposed.kotlin.datetime)
 
-                implementation("com.h2database:h2:$h2_version")
-
-                runtimeOnly("org.slf4j:slf4j-simple:2.0.6")
+                implementation(libs.h2)
+                runtimeOnly(libs.slf4j.simple)
             }
         }
-        val jvmTest by getting
-        val jsMain by getting {
+        jsMain {
             dependencies {
 
                 implementation(kotlin("stdlib-js"))
 
-                implementation(enforcedPlatform(kotlinw("wrappers-bom:$kotlin_wrapper_version")))
+                implementation(project.dependencies.enforcedPlatform(kotlinw("wrappers-bom:$kotlin_wrapper_version")))
                 implementation(kotlinw("react"))
                 implementation(kotlinw("react-dom"))
+                implementation(kotlinw("react-router-dom"))
+
                 implementation(kotlinw("emotion"))
-                implementation(kotlinw("mui"))
-                implementation(kotlinw("mui-icons"))
+                implementation(kotlinw("mui-base"))
+                implementation(kotlinw("mui-icons-material"))
+                implementation(kotlinw("muix-date-pickers"))
+
+                implementation(npm("date-fns", "2.30.0"))
+                implementation(npm("@date-io/date-fns", "2.17.0"))
 
                 implementation(ktor("client-core"))
                 implementation(ktor("client-content-negotiation"))
                 implementation(ktor("client-resources"))
             }
         }
-        val jsTest by getting
     }
 }
 
@@ -139,7 +140,5 @@ tasks.named<JavaExec>("run") {
     classpath(tasks.named<Jar>("jvmJar"))
 }
 
-fun exposed(target: String): String = "org.jetbrains.exposed:$target"
 fun kotlinw(target: String): String = "org.jetbrains.kotlin-wrappers:kotlin-$target"
 fun ktor(target: String): String = "io.ktor:ktor-$target"
-fun serial(target: String): String = "org.jetbrains.kotlinx:kotlinx-serialization-$target"
