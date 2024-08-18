@@ -1,0 +1,64 @@
+openapi: 3.0.0
+title: Sample Ktor Server
+summary: A sample Ktor Server App.
+description: This is a sample server for a Ktor Server.
+termsOfService: https://example.com/terms/
+contact:
+  name: API Support
+  url: https://www.example.com/support
+  email: support@example.com
+license:
+  name: Apache 2.0
+  url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:8080
+    description: local server for debugging
+
+paths:
+  /persons:
+    get:
+      summary: Returns all persons from the system
+      responses:
+        '200':
+          description: A JSON array of a persons
+    post:
+      summary: Add a new person to the system
+      responses:
+    put:
+      summary: Updates the person on the system
+      responses:
+    delete:
+      summary: Removes all persons from the system
+      responses:
+
+  /persons/{id}:
+    get:
+      summary: Returns the person by the given id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A JSON object of a person
+          content:
+            application/json:
+              schema:
+                type: array
+        '400':
+          description: The given request has illegal parameter.
+        '404':
+          description: A person with the specified ID was not found.
+    delete:
+      summary: Delete the person by the given id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
