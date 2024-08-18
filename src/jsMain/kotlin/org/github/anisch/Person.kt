@@ -32,7 +32,7 @@ external interface PersonProps : Props {
 }
 
 val PersonComponent = FC<Props> {
-    var postState by useState<NetworkState<Long>>(Init())
+    var postState by useState<NetworkState<Long>>(Init)
 
     PersonForm {
         post = postState
@@ -117,7 +117,7 @@ val PersonForm = FC<PersonProps> { props ->
             onClick = {
                 scope.launch {
                     log.info { "Send Person to server" }
-                    props.setPostState(IsLoading())
+                    props.setPostState(IsLoading)
 
                     val result = try {
                         val response = client.post(RPerson()) {
@@ -147,15 +147,15 @@ val PersonForm = FC<PersonProps> { props ->
 }
 
 val PersonListComponent = FC<PersonProps> { props ->
-    var data by useState<NetworkState<List<SPerson>>>(Init())
-    var singleData by useState<NetworkState<SPerson>>(Init())
-    var noSingleData by useState<NetworkState<SPerson>>(Init())
+    var data by useState<NetworkState<List<SPerson>>>(Init)
+    var singleData by useState<NetworkState<SPerson>>(Init)
+    var noSingleData by useState<NetworkState<SPerson>>(Init)
 
     useEffect(props.post) {
         if (props.post is Success) {
             scope.launch {
                 log.info { "Load all Persons from Server" }
-                data = IsLoading()
+                data = IsLoading
                 data = try {
                     val response = client.get(RPerson())
                     log.info { response }
@@ -165,7 +165,7 @@ val PersonListComponent = FC<PersonProps> { props ->
                     log.error(ex) { ex }
                     Error(cause = ex)
                 } finally {
-                    props.setPostState(Init())
+                    props.setPostState(Init)
                 }
             }
         }
@@ -174,7 +174,7 @@ val PersonListComponent = FC<PersonProps> { props ->
     useEffectOnce {
         scope.launch {
             log.info { "Load all Persons from Server" }
-            data = IsLoading()
+            data = IsLoading
             data = try {
                 val response = client.get(RPerson())
                 log.info { response }
@@ -190,7 +190,7 @@ val PersonListComponent = FC<PersonProps> { props ->
     useEffectOnce {
         scope.launch {
             log.info { "Load Person 1 from Server" }
-            singleData = IsLoading()
+            singleData = IsLoading
             singleData = try {
                 val response = client.get(RPerson.Id(id = 1L))
                 log.info { response }
@@ -210,7 +210,7 @@ val PersonListComponent = FC<PersonProps> { props ->
     useEffectOnce {
         scope.launch {
             log.info { "Load Person 42 from Server" }
-            noSingleData = IsLoading()
+            noSingleData = IsLoading
             noSingleData = try {
                 val response = client.get(RPerson.Id(id = 42L))
                 log.info { response }

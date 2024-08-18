@@ -58,8 +58,15 @@ class DefaultPersonRepository : PersonRepository {
             .firstOrNull()
     }
 
-    override suspend fun update(p: Person): Person {
-        throw NotImplementedError()
+    override suspend fun update(p: Person): Person = dbQuery {
+        PersonTable
+            .update({ id eq p.id }) {
+                it[name] = p.name
+                it[givenName] = p.givenName
+                it[birthDay] = p.birthDay
+                it[insuranceNumber] = p.insuranceNumber
+            }
+        p
     }
 
     override suspend fun delete(): List<Person> = dbQuery {

@@ -34,7 +34,9 @@ fun Application.personRouting() {
             call.respond(HttpStatusCode.Created, id)
         }
         put<RPerson> {
-            call.respond(HttpStatusCode.NotImplemented)
+            val p = call.receive<SPerson>()
+            val result = personRepository.update(p)
+            call.respond(HttpStatusCode.OK, result)
         }
         delete<RPerson> {
             val result = personRepository.delete()
