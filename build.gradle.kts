@@ -25,24 +25,19 @@ kotlin {
     js {
         browser {
             binaries.executable()
-            commonWebpackConfig(Action {
+            commonWebpackConfig {
                 cssSupport {
                     enabled.set(true)
                 }
-            })
+            }
         }
     }
 
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        val ktor_version = libs.versions.ktor.get()
-        val kotlin_wrapper_version = libs.versions.kt.wrappers.get()
-
         commonMain {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.html)
@@ -50,30 +45,26 @@ kotlin {
                 implementation(project.dependencies.enforcedPlatform(libs.kotlinx.serialization.bom))
                 implementation(libs.kotlinx.serialization.json)
 
-                implementation(project.dependencies.enforcedPlatform(ktor("bom:$ktor_version")))
-                implementation(ktor("resources"))
-                implementation(ktor("serialization-kotlinx-json"))
+                implementation(project.dependencies.enforcedPlatform(libs.ktor.bom))
+                implementation(libs.ktor.resources)
+                implementation(libs.ktor.serialization.kotlinx.json)
 
                 implementation(libs.kotlin.logging)
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation(kotlin("test"))
+
+                implementation(libs.clikt)
             }
         }
         jvmMain {
             dependencies {
-                implementation(kotlin("stdlib"))
-
-                implementation(ktor("server-call-logging"))
-                implementation(ktor("server-content-negotiation"))
-                implementation(ktor("server-core-jvm"))
-                implementation(ktor("server-cors"))
-                implementation(ktor("server-default-headers"))
-                implementation(ktor("server-netty"))
-                implementation(ktor("server-resources"))
-                implementation(ktor("server-html-builder-jvm"))
+                implementation(libs.ktor.server.call.logging)
+                implementation(libs.ktor.server.content.negotiation)
+                implementation(libs.ktor.server.core.jvm)
+                implementation(libs.ktor.server.cors)
+                implementation(libs.ktor.server.default.headers)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.resources)
+                implementation(libs.ktor.server.html.builder.jvm)
+                implementation(libs.ktor.server.swagger)
 
                 implementation(project.dependencies.enforcedPlatform(libs.koin.bom))
                 implementation(libs.koin.core)
@@ -91,25 +82,26 @@ kotlin {
         }
         jsMain {
             dependencies {
-
-                implementation(kotlin("stdlib-js"))
-
-                implementation(project.dependencies.enforcedPlatform(kotlinw("wrappers-bom:$kotlin_wrapper_version")))
+                implementation(project.dependencies.enforcedPlatform(libs.kotlin.wrappers.bom))
                 implementation(kotlinw("react"))
                 implementation(kotlinw("react-dom"))
                 implementation(kotlinw("react-router-dom"))
 
                 implementation(kotlinw("emotion"))
+
                 implementation(kotlinw("mui-base"))
+                implementation(kotlinw("mui-lab"))
+                implementation(kotlinw("mui-system"))
+                implementation(kotlinw("mui-material"))
                 implementation(kotlinw("mui-icons-material"))
                 implementation(kotlinw("muix-date-pickers"))
 
-                implementation(npm("date-fns", "2.30.0"))
-                implementation(npm("@date-io/date-fns", "2.17.0"))
+                implementation(npm("date-fns", "3.6.0"))
+                implementation(npm("@date-io/date-fns", "3.0.0"))
 
-                implementation(ktor("client-core"))
-                implementation(ktor("client-content-negotiation"))
-                implementation(ktor("client-resources"))
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.resources)
             }
         }
     }
@@ -124,12 +116,6 @@ application {
     )
 }
 
-tasks.withType<KotlinCompile> {
-    compilerOptions {
-        languageVersion.set(KotlinVersion.KOTLIN_2_0)
-    }
-}
-
 tasks.named<Copy>("jvmProcessResources") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
@@ -141,4 +127,3 @@ tasks.named<JavaExec>("run") {
 }
 
 fun kotlinw(target: String): String = "org.jetbrains.kotlin-wrappers:kotlin-$target"
-fun ktor(target: String): String = "io.ktor:ktor-$target"
