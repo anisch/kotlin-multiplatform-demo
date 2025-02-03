@@ -9,13 +9,13 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import mui.icons.material.Star
 import mui.material.*
+import mui.material.ButtonVariant.Companion.contained
 import mui.material.styles.TypographyVariant
+import mui.system.Box
 import mui.system.sx
 import org.github.anisch.NetworkState.*
 import react.*
 import react.dom.aria.AriaAutoComplete
-import react.dom.aria.ariaAutoComplete
-import react.dom.html.ReactHTML.form
 import react.dom.onChange
 import web.cssom.Display
 import web.cssom.JustifyContent
@@ -55,7 +55,6 @@ val PersonForm = FC<PersonProps> { props ->
             display = Display.grid
             justifyContent = JustifyContent.left
         }
-        component = form
         ariaAutoComplete = AriaAutoComplete.none
 
         Typography {
@@ -112,8 +111,9 @@ val PersonForm = FC<PersonProps> { props ->
                 insuranceNumber = target.value
             }
         }
+
         Button {
-            variant = ButtonVariant.outlined
+            variant = contained
             onClick = {
                 scope.launch {
                     log.info { "Send Person to server" }
@@ -131,6 +131,7 @@ val PersonForm = FC<PersonProps> { props ->
                         log.error(ex) { ex }
                         Error(cause = ex)
                     }
+
                     if (result is Success) {
                         name = ""
                         givenName = ""

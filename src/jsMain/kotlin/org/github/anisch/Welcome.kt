@@ -27,12 +27,14 @@ val Welcome = FC<WelcomeProps> { props ->
         }
         +"Hello, $name"
     }
+
     TextField {
         css {
             marginTop = 5.px
             marginBottom = 5.px
             fontSize = 14.px
         }
+        id = "outlined-basic"
         type = InputType.text
         value = name
         size = Size.small
@@ -41,5 +43,6 @@ val Welcome = FC<WelcomeProps> { props ->
             name = target.value
         }
     }
+
     PersonComponent {}
 }

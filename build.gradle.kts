@@ -85,14 +85,14 @@ kotlin {
                 implementation(project.dependencies.enforcedPlatform(libs.kotlin.wrappers.bom))
                 implementation(kotlinw("react"))
                 implementation(kotlinw("react-dom"))
-                implementation(kotlinw("react-router-dom"))
+//                implementation(kotlinw("react-router-dom"))
 
                 implementation(kotlinw("emotion"))
 
                 implementation(kotlinw("mui-base"))
                 implementation(kotlinw("mui-lab"))
-                implementation(kotlinw("mui-system"))
                 implementation(kotlinw("mui-material"))
+                implementation(kotlinw("mui-system"))
                 implementation(kotlinw("mui-icons-material"))
                 implementation(kotlinw("muix-date-pickers"))
 

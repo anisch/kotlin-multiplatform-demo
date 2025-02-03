@@ -31,8 +31,8 @@ suspend fun <T> dbQuery(block: suspend () -> T): T =
 class DefaultPersonRepository : PersonRepository {
     override suspend fun create(p: Person): Long = dbQuery {
         val id = PersonTable
-            .insert {
-                if (p.id > 0L) it[id] = p.id
+            .upsert {
+                it[id] = p.id
                 it[name] = p.name
                 it[givenName] = p.givenName
                 it[birthDay] = p.birthDay

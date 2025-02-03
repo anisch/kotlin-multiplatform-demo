@@ -1,6 +1,7 @@
 package org.github.anisch
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
@@ -30,7 +31,7 @@ fun HTML.index() {
     }
     body {
         div {
-            +"Hello from Ktor v3"
+            "Hello from Ktor v3"
         }
         div {
             id = "root"
